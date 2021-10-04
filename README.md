@@ -13,7 +13,7 @@ Location in GUI:
 ```hcl
 module "aci_redirect_policy" {
   source  = "netascode/redirect-policy/aci"
-  version = ">= 0.0.1"
+  version = ">= 0.0.2"
 
   tenant                = "ABC"
   name                  = "REDIRECT1"
@@ -33,7 +33,7 @@ module "aci_redirect_policy" {
     ip          = "1.1.1.1"
     ip_2        = "1.1.1.2"
     mac         = "00:01:02:03:04:05"
-    pod         = 2
+    pod_id      = 2
   }]
 }
 
@@ -69,7 +69,7 @@ module "aci_redirect_policy" {
 | <a name="input_pod_aware"></a> [pod\_aware](#input\_pod\_aware) | Pod aware redirect. | `bool` | `false` | no |
 | <a name="input_resilient_hashing"></a> [resilient\_hashing](#input\_resilient\_hashing) | Resilient hashing. | `bool` | `false` | no |
 | <a name="input_threshold_down_action"></a> [threshold\_down\_action](#input\_threshold\_down\_action) | Threshold down action. Choices: `permit`, `deny`, `bypass`. | `string` | `"permit"` | no |
-| <a name="input_l3_destinations"></a> [l3\_destinations](#input\_l3\_destinations) | List of L3 destinations. Allowed values `pod`: 1-255. | <pre>list(object({<br>    description = optional(string)<br>    ip          = string<br>    ip_2        = optional(string)<br>    mac         = string<br>    pod         = optional(number)<br>  }))</pre> | `[]` | no |
+| <a name="input_l3_destinations"></a> [l3\_destinations](#input\_l3\_destinations) | List of L3 destinations. Allowed values `pod`: 1-255. | <pre>list(object({<br>    description = optional(string)<br>    ip          = string<br>    ip_2        = optional(string)<br>    mac         = string<br>    pod_id      = optional(number)<br>  }))</pre> | `[]` | no |
 
 ## Outputs
 

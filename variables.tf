@@ -126,7 +126,7 @@ variable "l3_destinations" {
     ip          = string
     ip_2        = optional(string)
     mac         = string
-    pod         = optional(number)
+    pod_id      = optional(number)
   }))
   default = []
 
@@ -139,9 +139,9 @@ variable "l3_destinations" {
 
   validation {
     condition = alltrue([
-      for l3 in var.l3_destinations : l3.pod == null || (l3.pod >= 1 && l3.pod <= 255)
+      for l3 in var.l3_destinations : l3.pod_id == null || (l3.pod_id >= 1 && l3.pod_id <= 255)
     ])
-    error_message = "`pod`: Minimum value: 1. Maximum value: 255."
+    error_message = "`pod_id`: Minimum value: 1. Maximum value: 255."
   }
 }
 

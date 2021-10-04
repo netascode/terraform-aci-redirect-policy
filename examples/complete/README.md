@@ -14,7 +14,7 @@ Note that this example will create resources. Resources can be destroyed with `t
 ```hcl
 module "aci_redirect_policy" {
   source  = "netascode/redirect-policy/aci"
-  version = ">= 0.0.1"
+  version = ">= 0.0.2"
 
   tenant                = "ABC"
   name                  = "REDIRECT1"
@@ -34,7 +34,7 @@ module "aci_redirect_policy" {
     ip          = "1.1.1.1"
     ip_2        = "1.1.1.2"
     mac         = "00:01:02:03:04:05"
-    pod         = 2
+    pod_id      = 2
   }]
 }
 
