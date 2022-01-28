@@ -13,7 +13,7 @@ Location in GUI:
 ```hcl
 module "aci_redirect_policy" {
   source  = "netascode/redirect-policy/aci"
-  version = ">= 0.0.2"
+  version = ">= 0.1.0"
 
   tenant                = "ABC"
   name                  = "REDIRECT1"
@@ -36,7 +36,6 @@ module "aci_redirect_policy" {
     pod_id      = 2
   }]
 }
-
 ```
 
 ## Requirements
@@ -44,13 +43,13 @@ module "aci_redirect_policy" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
-| <a name="requirement_aci"></a> [aci](#requirement\_aci) | >= 0.2.0 |
+| <a name="requirement_aci"></a> [aci](#requirement\_aci) | >= 2.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aci"></a> [aci](#provider\_aci) | >= 0.2.0 |
+| <a name="provider_aci"></a> [aci](#provider\_aci) | >= 2.0.0 |
 
 ## Inputs
 
@@ -82,6 +81,6 @@ module "aci_redirect_policy" {
 
 | Name | Type |
 |------|------|
-| [aci_rest.vnsRedirectDest](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
-| [aci_rest.vnsSvcRedirectPol](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest_managed.vnsRedirectDest](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
+| [aci_rest_managed.vnsSvcRedirectPol](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 <!-- END_TF_DOCS -->

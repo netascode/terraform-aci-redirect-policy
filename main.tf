@@ -1,4 +1,4 @@
-resource "aci_rest" "vnsSvcRedirectPol" {
+resource "aci_rest_managed" "vnsSvcRedirectPol" {
   dn         = "uni/tn-${var.tenant}/svcCont/svcRedirectPol-${var.name}"
   class_name = "vnsSvcRedirectPol"
   content = {
@@ -17,9 +17,9 @@ resource "aci_rest" "vnsSvcRedirectPol" {
   }
 }
 
-resource "aci_rest" "vnsRedirectDest" {
+resource "aci_rest_managed" "vnsRedirectDest" {
   for_each   = { for destination in var.l3_destinations : destination.ip => destination }
-  dn         = "${aci_rest.vnsSvcRedirectPol.dn}/RedirectDest_ip-[${each.value.ip}]"
+  dn         = "${aci_rest_managed.vnsSvcRedirectPol.dn}/RedirectDest_ip-[${each.value.ip}]"
   class_name = "vnsRedirectDest"
   content = {
     descr = each.value.description != null ? each.value.description : ""

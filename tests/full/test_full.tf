@@ -5,13 +5,13 @@ terraform {
     }
 
     aci = {
-      source  = "netascode/aci"
-      version = ">=0.2.0"
+      source  = "CiscoDevNet/aci"
+      version = ">=2.0.0"
     }
   }
 }
 
-resource "aci_rest" "fvTenant" {
+resource "aci_rest_managed" "fvTenant" {
   dn         = "uni/tn-TF"
   class_name = "fvTenant"
 }
@@ -19,7 +19,7 @@ resource "aci_rest" "fvTenant" {
 module "main" {
   source = "../.."
 
-  tenant                = aci_rest.fvTenant.content.name
+  tenant                = aci_rest_managed.fvTenant.content.name
   name                  = "REDIRECT1"
   alias                 = "REDIRECT1-ALIAS"
   description           = "My Description"
@@ -41,7 +41,7 @@ module "main" {
   }]
 }
 
-data "aci_rest" "vnsSvcRedirectPol" {
+data "aci_rest_managed" "vnsSvcRedirectPol" {
   dn = module.main.dn
 
   depends_on = [module.main]
@@ -52,79 +52,79 @@ resource "test_assertions" "vnsSvcRedirectPol" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.name
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.name
     want        = module.main.name
   }
 
   equal "nameAlias" {
     description = "nameAlias"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.nameAlias
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.nameAlias
     want        = "REDIRECT1-ALIAS"
   }
 
   equal "descr" {
     description = "descr"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.descr
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.descr
     want        = "My Description"
   }
 
   equal "AnycastEnabled" {
     description = "AnycastEnabled"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.AnycastEnabled
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.AnycastEnabled
     want        = "no"
   }
 
   equal "destType" {
     description = "destType"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.destType
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.destType
     want        = "L3"
   }
 
   equal "hashingAlgorithm" {
     description = "hashingAlgorithm"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.hashingAlgorithm
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.hashingAlgorithm
     want        = "sip"
   }
 
   equal "thresholdEnable" {
     description = "thresholdEnable"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.thresholdEnable
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.thresholdEnable
     want        = "yes"
   }
 
   equal "maxThresholdPercent" {
     description = "maxThresholdPercent"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.maxThresholdPercent
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.maxThresholdPercent
     want        = "90"
   }
 
   equal "minThresholdPercent" {
     description = "minThresholdPercent"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.minThresholdPercent
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.minThresholdPercent
     want        = "10"
   }
 
   equal "programLocalPodOnly" {
     description = "programLocalPodOnly"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.programLocalPodOnly
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.programLocalPodOnly
     want        = "yes"
   }
 
   equal "resilientHashEnabled" {
     description = "resilientHashEnabled"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.resilientHashEnabled
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.resilientHashEnabled
     want        = "yes"
   }
 
   equal "thresholdDownAction" {
     description = "thresholdDownAction"
-    got         = data.aci_rest.vnsSvcRedirectPol.content.thresholdDownAction
+    got         = data.aci_rest_managed.vnsSvcRedirectPol.content.thresholdDownAction
     want        = "deny"
   }
 }
 
-data "aci_rest" "vnsRedirectDest" {
-  dn = "${data.aci_rest.vnsSvcRedirectPol.id}/RedirectDest_ip-[1.1.1.1]"
+data "aci_rest_managed" "vnsRedirectDest" {
+  dn = "${data.aci_rest_managed.vnsSvcRedirectPol.id}/RedirectDest_ip-[1.1.1.1]"
 
   depends_on = [module.main]
 }
@@ -134,31 +134,31 @@ resource "test_assertions" "vnsRedirectDest" {
 
   equal "descr" {
     description = "descr"
-    got         = data.aci_rest.vnsRedirectDest.content.descr
+    got         = data.aci_rest_managed.vnsRedirectDest.content.descr
     want        = "L3 description"
   }
 
   equal "ip" {
     description = "ip"
-    got         = data.aci_rest.vnsRedirectDest.content.ip
+    got         = data.aci_rest_managed.vnsRedirectDest.content.ip
     want        = "1.1.1.1"
   }
 
   equal "ip2" {
     description = "ip2"
-    got         = data.aci_rest.vnsRedirectDest.content.ip2
+    got         = data.aci_rest_managed.vnsRedirectDest.content.ip2
     want        = "1.1.1.2"
   }
 
   equal "mac" {
     description = "mac"
-    got         = data.aci_rest.vnsRedirectDest.content.mac
+    got         = data.aci_rest_managed.vnsRedirectDest.content.mac
     want        = "00:01:02:03:04:05"
   }
 
   equal "podId" {
     description = "podId"
-    got         = data.aci_rest.vnsRedirectDest.content.podId
+    got         = data.aci_rest_managed.vnsRedirectDest.content.podId
     want        = "2"
   }
 }
