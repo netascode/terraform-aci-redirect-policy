@@ -122,11 +122,11 @@ variable "threshold_down_action" {
 variable "l3_destinations" {
   description = "List of L3 destinations. Allowed values `pod`: 1-255."
   type = list(object({
-    description = optional(string)
+    description = optional(string, "")
     ip          = string
     ip_2        = optional(string)
     mac         = string
-    pod_id      = optional(number)
+    pod_id      = optional(number, 1)
   }))
   default = []
 
