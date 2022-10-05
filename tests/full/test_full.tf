@@ -147,7 +147,7 @@ resource "test_assertions" "vnsRsIPSLAMonitoringPol" {
 
 
 data "aci_rest_managed" "vnsRsBackupPol" {
-  dn = "${data.aci_rest_managed.vnsSvcRedirectPol.id}/rsBackupPol-REDIRECT_BCK1"
+  dn = "${data.aci_rest_managed.vnsSvcRedirectPol.id}/rsBackupPol"
 
   depends_on = [module.main]
 }
@@ -159,7 +159,7 @@ resource "test_assertions" "vnsRsBackupPol" {
   equal "tDn" {
     description = "tDn"
     got         = data.aci_rest_managed.vnsRsBackupPol.content.tDn
-    want        = "${aci_rest_managed.fvTenant.id}/svcCont/backupPol-"
+    want        = "${aci_rest_managed.fvTenant.id}/svcCont/backupPol-REDIRECT_BCK1"
   }
 }
 
