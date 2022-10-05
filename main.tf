@@ -17,6 +17,24 @@ resource "aci_rest_managed" "vnsSvcRedirectPol" {
   }
 }
 
+resource "aci_rest_managed" "vnsRsIPSLAMonitoringPol" {
+  count      = var.ip_sla_policy != "" ? 1 : 0
+  dn         = "${aci_rest_managed.vnsSvcRedirectPol.dn}/rsIPSLAMonitoringPol"
+  class_name = "vnsRsIPSLAMonitoringPol"
+  content = {
+    "tDn" = "uni/tn-${var.tenant}/ipslaMonitoringPol-${var.ip_sla_policy}"
+  }
+}
+
+resource "aci_rest_managed" "vnsRsBackupPol" {
+  count      = var.resilient_hashing == true && var.redirect_backup_policy != "" ? 1 : 0
+  dn         = "${aci_rest_managed.vnsSvcRedirectPol.dn}/rsBackupPol"
+  class_name = "vnsRsBackupPol"
+  content = {
+    "tDn" = "uni/tn-${var.tenant}/svcCont/backupPol-${var.redirect_backup_policy}"
+  }
+}
+
 resource "aci_rest_managed" "vnsRedirectDest" {
   for_each   = { for destination in var.l3_destinations : destination.ip => destination }
   dn         = "${aci_rest_managed.vnsSvcRedirectPol.dn}/RedirectDest_ip-[${each.value.ip}]"

@@ -15,19 +15,21 @@ module "aci_redirect_policy" {
   source  = "netascode/redirect-policy/aci"
   version = ">= 0.2.0"
 
-  tenant                = "ABC"
-  name                  = "REDIRECT1"
-  alias                 = "REDIRECT1-ALIAS"
-  description           = "My Description"
-  anycast               = false
-  type                  = "L3"
-  hashing               = "sip"
-  threshold             = true
-  max_threshold         = 90
-  min_threshold         = 10
-  pod_aware             = true
-  resilient_hashing     = true
-  threshold_down_action = "deny"
+  tenant                 = "ABC"
+  name                   = "REDIRECT1"
+  alias                  = "REDIRECT1-ALIAS"
+  description            = "My Description"
+  anycast                = false
+  type                   = "L3"
+  hashing                = "sip"
+  threshold              = true
+  max_threshold          = 90
+  min_threshold          = 10
+  pod_aware              = true
+  resilient_hashing      = true
+  threshold_down_action  = "deny"
+  ip_sla_policy          = "SLA1"
+  redirect_backup_policy = "REDIRECT_BCK1"
   l3_destinations = [{
     description = "L3 description"
     ip          = "1.1.1.1"
@@ -68,6 +70,8 @@ module "aci_redirect_policy" {
 | <a name="input_pod_aware"></a> [pod\_aware](#input\_pod\_aware) | Pod aware redirect. | `bool` | `false` | no |
 | <a name="input_resilient_hashing"></a> [resilient\_hashing](#input\_resilient\_hashing) | Resilient hashing. | `bool` | `false` | no |
 | <a name="input_threshold_down_action"></a> [threshold\_down\_action](#input\_threshold\_down\_action) | Threshold down action. Choices: `permit`, `deny`, `bypass`. | `string` | `"permit"` | no |
+| <a name="input_ip_sla_policy"></a> [ip\_sla\_policy](#input\_ip\_sla\_policy) | IP SLA Policy Name. | `string` | `""` | no |
+| <a name="input_redirect_backup_policy"></a> [redirect\_backup\_policy](#input\_redirect\_backup\_policy) | Redirect Backup Policy Name. | `string` | `""` | no |
 | <a name="input_l3_destinations"></a> [l3\_destinations](#input\_l3\_destinations) | List of L3 destinations. Allowed values `pod`: 1-255. | <pre>list(object({<br>    description = optional(string, "")<br>    ip          = string<br>    ip_2        = optional(string)<br>    mac         = string<br>    pod_id      = optional(number, 1)<br>  }))</pre> | `[]` | no |
 
 ## Outputs
@@ -82,5 +86,7 @@ module "aci_redirect_policy" {
 | Name | Type |
 |------|------|
 | [aci_rest_managed.vnsRedirectDest](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
+| [aci_rest_managed.vnsRsBackupPol](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
+| [aci_rest_managed.vnsRsIPSLAMonitoringPol](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsSvcRedirectPol](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 <!-- END_TF_DOCS -->

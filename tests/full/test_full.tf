@@ -21,19 +21,21 @@ resource "aci_rest_managed" "fvTenant" {
 module "main" {
   source = "../.."
 
-  tenant                = aci_rest_managed.fvTenant.content.name
-  name                  = "REDIRECT1"
-  alias                 = "REDIRECT1-ALIAS"
-  description           = "My Description"
-  anycast               = false
-  type                  = "L3"
-  hashing               = "sip"
-  threshold             = true
-  max_threshold         = 90
-  min_threshold         = 10
-  pod_aware             = true
-  resilient_hashing     = true
-  threshold_down_action = "deny"
+  tenant                 = aci_rest_managed.fvTenant.content.name
+  name                   = "REDIRECT1"
+  alias                  = "REDIRECT1-ALIAS"
+  description            = "My Description"
+  anycast                = false
+  type                   = "L3"
+  hashing                = "sip"
+  threshold              = true
+  max_threshold          = 90
+  min_threshold          = 10
+  pod_aware              = true
+  resilient_hashing      = true
+  threshold_down_action  = "deny"
+  ip_sla_policy          = "SLA1"
+  redirect_backup_policy = "REDIRECT_BCK1"
   l3_destinations = [{
     description = "L3 description"
     ip          = "1.1.1.1"
@@ -122,6 +124,42 @@ resource "test_assertions" "vnsSvcRedirectPol" {
     description = "thresholdDownAction"
     got         = data.aci_rest_managed.vnsSvcRedirectPol.content.thresholdDownAction
     want        = "deny"
+  }
+}
+
+
+data "aci_rest_managed" "vnsRsIPSLAMonitoringPol" {
+  dn = "${data.aci_rest_managed.vnsSvcRedirectPol.id}/rsIPSLAMonitoringPol"
+
+  depends_on = [module.main]
+}
+
+
+resource "test_assertions" "vnsRsIPSLAMonitoringPol" {
+  component = "vnsRsIPSLAMonitoringPol"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.vnsRsIPSLAMonitoringPol.content.tDn
+    want        = "${aci_rest_managed.fvTenant.id}/ipslaMonitoringPol-SLA1"
+  }
+}
+
+
+data "aci_rest_managed" "vnsRsBackupPol" {
+  dn = "${data.aci_rest_managed.vnsSvcRedirectPol.id}/rsBackupPol-REDIRECT_BCK1"
+
+  depends_on = [module.main]
+}
+
+
+resource "test_assertions" "vnsRsBackupPol" {
+  component = "vnsRsBackupPol"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.vnsRsBackupPol.content.tDn
+    want        = "${aci_rest_managed.fvTenant.id}/svcCont/backupPol-"
   }
 }
 

@@ -119,6 +119,26 @@ variable "threshold_down_action" {
   }
 }
 
+variable "ip_sla_policy" {
+  description = "IP SLA Policy Name."
+  type        = string
+  default     = ""
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.ip_sla_policy))
+    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+}
+
+variable "redirect_backup_policy" {
+  description = "Redirect Backup Policy Name."
+  type        = string
+  default     = ""
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.redirect_backup_policy))
+    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+}
+
 variable "l3_destinations" {
   description = "List of L3 destinations. Allowed values `pod`: 1-255."
   type = list(object({
