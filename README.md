@@ -31,11 +31,12 @@ module "aci_redirect_policy" {
   ip_sla_policy          = "SLA1"
   redirect_backup_policy = "REDIRECT_BCK1"
   l3_destinations = [{
-    description = "L3 description"
-    ip          = "1.1.1.1"
-    ip_2        = "1.1.1.2"
-    mac         = "00:01:02:03:04:05"
-    pod_id      = 2
+    description           = "L3 description"
+    ip                    = "1.1.1.1"
+    ip_2                  = "1.1.1.2"
+    mac                   = "00:01:02:03:04:05"
+    pod_id                = 2
+    redirect_health_group = "HEALTH_GRP1"
   }]
 }
 ```
@@ -72,7 +73,7 @@ module "aci_redirect_policy" {
 | <a name="input_threshold_down_action"></a> [threshold\_down\_action](#input\_threshold\_down\_action) | Threshold down action. Choices: `permit`, `deny`, `bypass`. | `string` | `"permit"` | no |
 | <a name="input_ip_sla_policy"></a> [ip\_sla\_policy](#input\_ip\_sla\_policy) | IP SLA Policy Name. | `string` | `""` | no |
 | <a name="input_redirect_backup_policy"></a> [redirect\_backup\_policy](#input\_redirect\_backup\_policy) | Redirect Backup Policy Name. | `string` | `""` | no |
-| <a name="input_l3_destinations"></a> [l3\_destinations](#input\_l3\_destinations) | List of L3 destinations. Allowed values `pod`: 1-255. | <pre>list(object({<br>    description = optional(string, "")<br>    ip          = string<br>    ip_2        = optional(string)<br>    mac         = string<br>    pod_id      = optional(number, 1)<br>  }))</pre> | `[]` | no |
+| <a name="input_l3_destinations"></a> [l3\_destinations](#input\_l3\_destinations) | List of L3 destinations. Allowed values `pod`: 1-255. | <pre>list(object({<br>    description           = optional(string, "")<br>    ip                    = string<br>    ip_2                  = optional(string)<br>    mac                   = string<br>    pod_id                = optional(number, 1)<br>    redirect_health_group = optional(string, "")<br>  }))</pre> | `[]` | no |
 
 ## Outputs
 
@@ -88,5 +89,6 @@ module "aci_redirect_policy" {
 | [aci_rest_managed.vnsRedirectDest](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsBackupPol](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsIPSLAMonitoringPol](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
+| [aci_rest_managed.vnsRsRedirectHealthGroup](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsSvcRedirectPol](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 <!-- END_TF_DOCS -->

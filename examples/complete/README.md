@@ -32,11 +32,12 @@ module "aci_redirect_policy" {
   ip_sla_policy          = "SLA1"
   redirect_backup_policy = "REDIRECT_BCK1"
   l3_destinations = [{
-    description = "L3 description"
-    ip          = "1.1.1.1"
-    ip_2        = "1.1.1.2"
-    mac         = "00:01:02:03:04:05"
-    pod_id      = 2
+    description           = "L3 description"
+    ip                    = "1.1.1.1"
+    ip_2                  = "1.1.1.2"
+    mac                   = "00:01:02:03:04:05"
+    pod_id                = 2
+    redirect_health_group = "HEALTH_GRP1"
   }]
 }
 ```

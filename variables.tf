@@ -142,11 +142,12 @@ variable "redirect_backup_policy" {
 variable "l3_destinations" {
   description = "List of L3 destinations. Allowed values `pod`: 1-255."
   type = list(object({
-    description = optional(string, "")
-    ip          = string
-    ip_2        = optional(string)
-    mac         = string
-    pod_id      = optional(number, 1)
+    description           = optional(string, "")
+    ip                    = string
+    ip_2                  = optional(string)
+    mac                   = string
+    pod_id                = optional(number, 1)
+    redirect_health_group = optional(string, "")
   }))
   default = []
 
@@ -162,6 +163,13 @@ variable "l3_destinations" {
       for l3 in var.l3_destinations : l3.pod_id == null || (l3.pod_id >= 1 && l3.pod_id <= 255)
     ])
     error_message = "`pod_id`: Minimum value: 1. Maximum value: 255."
+  }
+
+  validation {
+    condition = alltrue([
+      for l3 in var.l3_destinations : can(regex("^[a-zA-Z0-9_.-]{0,64}$", l3.redirect_health_group))
+    ])
+    error_message = "`redirect_health_group` allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
   }
 }
 

@@ -37,11 +37,12 @@ module "main" {
   ip_sla_policy          = "SLA1"
   redirect_backup_policy = "REDIRECT_BCK1"
   l3_destinations = [{
-    description = "L3 description"
-    ip          = "1.1.1.1"
-    ip_2        = "1.1.1.2"
-    mac         = "00:01:02:03:04:05"
-    pod_id      = 2
+    description           = "L3 description"
+    ip                    = "1.1.1.1"
+    ip_2                  = "1.1.1.2"
+    mac                   = "00:01:02:03:04:05"
+    pod_id                = 2
+    redirect_health_group = "TEST"
   }]
 }
 
@@ -201,4 +202,22 @@ resource "test_assertions" "vnsRedirectDest" {
     got         = data.aci_rest_managed.vnsRedirectDest.content.podId
     want        = "2"
   }
+}
+
+data "aci_rest_managed" "vnsRsRedirectHealthGroup" {
+  dn = "${data.aci_rest_managed.vnsRedirectDest.id}/rsRedirectHealthGroup"
+
+  depends_on = [module.main]
+}
+
+
+resource "test_assertions" "vnsRsRedirectHealthGroup" {
+  component = "vnsRsRedirectHealthGroup"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.vnsRsRedirectHealthGroup.content.tDn
+    want        = "uni/tn-TF/svcCont/redirectHealthGroup-TEST"
+  }
+
 }
