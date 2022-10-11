@@ -21,25 +21,28 @@ resource "aci_rest_managed" "fvTenant" {
 module "main" {
   source = "../.."
 
-  tenant                = aci_rest_managed.fvTenant.content.name
-  name                  = "REDIRECT1"
-  alias                 = "REDIRECT1-ALIAS"
-  description           = "My Description"
-  anycast               = false
-  type                  = "L3"
-  hashing               = "sip"
-  threshold             = true
-  max_threshold         = 90
-  min_threshold         = 10
-  pod_aware             = true
-  resilient_hashing     = true
-  threshold_down_action = "deny"
+  tenant                 = aci_rest_managed.fvTenant.content.name
+  name                   = "REDIRECT1"
+  alias                  = "REDIRECT1-ALIAS"
+  description            = "My Description"
+  anycast                = false
+  type                   = "L3"
+  hashing                = "sip"
+  threshold              = true
+  max_threshold          = 90
+  min_threshold          = 10
+  pod_aware              = true
+  resilient_hashing      = true
+  threshold_down_action  = "deny"
+  ip_sla_policy          = "SLA1"
+  redirect_backup_policy = "REDIRECT_BCK1"
   l3_destinations = [{
-    description = "L3 description"
-    ip          = "1.1.1.1"
-    ip_2        = "1.1.1.2"
-    mac         = "00:01:02:03:04:05"
-    pod_id      = 2
+    description           = "L3 description"
+    ip                    = "1.1.1.1"
+    ip_2                  = "1.1.1.2"
+    mac                   = "00:01:02:03:04:05"
+    pod_id                = 2
+    redirect_health_group = "TEST"
   }]
 }
 
@@ -125,6 +128,42 @@ resource "test_assertions" "vnsSvcRedirectPol" {
   }
 }
 
+
+data "aci_rest_managed" "vnsRsIPSLAMonitoringPol" {
+  dn = "${data.aci_rest_managed.vnsSvcRedirectPol.id}/rsIPSLAMonitoringPol"
+
+  depends_on = [module.main]
+}
+
+
+resource "test_assertions" "vnsRsIPSLAMonitoringPol" {
+  component = "vnsRsIPSLAMonitoringPol"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.vnsRsIPSLAMonitoringPol.content.tDn
+    want        = "${aci_rest_managed.fvTenant.id}/ipslaMonitoringPol-SLA1"
+  }
+}
+
+
+data "aci_rest_managed" "vnsRsBackupPol" {
+  dn = "${data.aci_rest_managed.vnsSvcRedirectPol.id}/rsBackupPol"
+
+  depends_on = [module.main]
+}
+
+
+resource "test_assertions" "vnsRsBackupPol" {
+  component = "vnsRsBackupPol"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.vnsRsBackupPol.content.tDn
+    want        = "${aci_rest_managed.fvTenant.id}/svcCont/backupPol-REDIRECT_BCK1"
+  }
+}
+
 data "aci_rest_managed" "vnsRedirectDest" {
   dn = "${data.aci_rest_managed.vnsSvcRedirectPol.id}/RedirectDest_ip-[1.1.1.1]"
 
@@ -163,4 +202,22 @@ resource "test_assertions" "vnsRedirectDest" {
     got         = data.aci_rest_managed.vnsRedirectDest.content.podId
     want        = "2"
   }
+}
+
+data "aci_rest_managed" "vnsRsRedirectHealthGroup" {
+  dn = "${data.aci_rest_managed.vnsRedirectDest.id}/rsRedirectHealthGroup"
+
+  depends_on = [module.main]
+}
+
+
+resource "test_assertions" "vnsRsRedirectHealthGroup" {
+  component = "vnsRsRedirectHealthGroup"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.vnsRsRedirectHealthGroup.content.tDn
+    want        = "uni/tn-TF/svcCont/redirectHealthGroup-TEST"
+  }
+
 }
