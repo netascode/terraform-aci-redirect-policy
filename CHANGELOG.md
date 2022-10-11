@@ -1,4 +1,4 @@
-## 0.2.1 (unreleased)
+## 0.2.1
 
 - Add IP SLA policy
 - Add redirect backup policy
