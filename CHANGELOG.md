@@ -1,3 +1,9 @@
+## 0.2.1 (unreleased)
+
+- Add IP SLA policy
+- Add redirect backup policy
+- Add redirect health group to L3 destinations
+
 ## 0.2.0
 
 - Update to support new Terraform 1.3 `optional` syntax
